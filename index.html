@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Academy - Assignment Submission</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================= Base Variables & Reset ================= */
+        :root {
+            --bg-dark: #12151c;        /* خلفية رئيسية مظلمة */
+            --card-dark: #1e232e;      /* خلفية الفورم */
+            --input-dark: #2a3140;     /* خلفية الحقول */
+            --text-main: #f0f4f8;      /* لون النص الأساسي */
+            --text-muted: #94a3b8;     /* لون النص الثانوي */
+            
+            /* Brand Colors extracted from logo_future.png */
+            --brand-blue: #38BFE2;
+            --brand-orange: #F47A20;
+            --brand-yellow: #F9C840;
+            
+            --success: #2eCA7F;
+            --error: #FF5C5C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ================= Container & Logo ================= */
+        .container {
+            background-color: var(--card-dark);
+            width: 100%;
+            max-width: 550px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-top: 4px solid var(--brand-blue);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            max-width: 150px;
+            height: auto;
+            background-color: white; /* لإبراز الشعار إذا كان شفافاً وفيه نصوص داكنة */
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--brand-blue);
+        }
+
+        /* ================= Form Elements ================= */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        label small {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 0.8rem;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--input-dark);
+            border: 1px solid #3d475a;
+            color: var(--text-main);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: var(--brand-blue);
+            box-shadow: 0 0 0 3px rgba(56, 191, 226, 0.2);
+        }
+
+        /* ================= File Upload ================= */
+        .file-upload-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .custom-file-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(56, 191, 226, 0.1);
+            color: var(--brand-blue);
+            border: 2px dashed var(--brand-blue);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .file-upload-wrapper:hover .custom-file-btn {
+            background-color: rgba(56, 191, 226, 0.2);
+        }
+
+        .upload-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Selected Files List */
+        .file-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .file-list li {
+            background-color: var(--input-dark);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            border-left: 3px solid var(--brand-orange);
+            word-break: break-all;
+        }
+
+        /* ================= Submit Button ================= */
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--brand-blue), #1F8EB8);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(135deg, #1F8EB8, var(--brand-blue));
+            box-shadow: 0 5px 15px rgba(56, 191, 226, 0.4);
+        }
+
+        button[type="submit"]:disabled {
+            background: #4a5568;
+            cursor: not-allowed;
+            box-shadow: none;
+            color: #a0aec0;
+        }
+
+        /* ================= Validation & Status ================= */
+        .error-text {
+            display: none;
+            color: var(--brand-orange);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .status-container {
+            margin-top: 20px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: var(--input-dark);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 8px;
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--brand-yellow);
+            transition: width 0.4s ease;
+        }
+
+        .status-message {
+            text-align: center;
+            font-weight: 600;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            white-space: pre-line;
+        }
+
+        .status-message.success {
+            display: block;
+            background-color: rgba(46, 202, 127, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-message.error {
+            display: block;
+            background-color: rgba(255, 92, 92, 0.1);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        /* ================= Mobile Responsiveness ================= */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+            }
+            .form-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-container">
+            <img src="logo_future.png" alt="Future Academy Logo" class="logo">
+        </div>
+
+        <h1 class="form-title">Assignment Submission</h1>
+
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="studentName">Full Name * <small>(e.g. Ahmed Mohamed Ali)</small></label>
+                <input type="text" id="studentName" name="studentName" placeholder="Enter your full 3-part name" required>
+                <span class="error-text" id="nameError">Please enter at least 3 names.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="groupName">Group *</label>
+                <select id="groupName" name="groupName" required>
+                    <option value="" disabled selected>Select your group</option>
+                    <option value="Power BI 1">Power BI 1</option>
+                    <option value="Power BI 2">Power BI 2</option>
+                    <option value="Python">Python</option>
+                    <option value="Flutter">Flutter</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="sessionName">Session *</label>
+                <select id="sessionName" name="sessionName" required>
+                    <option value="" disabled selected>Select session</option>
+                    <option value="Session 1">Session 1</option>
+                    <option value="Session 2">Session 2</option>
+                    <option value="Session 3">Session 3</option>
+                    <option value="Session 4">Session 4</option>
+                    <option value="Session 5">Session 5</option>
+                    <option value="Session 6">Session 6</option>
+                    <option value="Session 7">Session 7</option>
+                    <option value="Session 8">Session 8</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Upload Files *</label>
+                <div class="file-upload-wrapper">
+                    <input type="file" id="files" name="files" multiple required>
+                    <label for="files" class="custom-file-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="upload-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        Select Files
+                    </label>
+                </div>
+                <ul id="fileList" class="file-list"></ul>
+            </div>
+
+            <button type="submit" id="submitBtn">Submit Assignment</button>
+
+            <div class="status-container">
+                <div class="progress-bar-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div id="statusMessage" class="status-message"></div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // URL الخاص بالـ Apps Script
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyPJmDH4b731C3HMeeS72mBpmEXVoUM5YMKGmbCtC_FVCIKlFsIrHUPltK89aQ0Pyux/exec";
+
+        // DOM Elements
+        const form = document.getElementById("uploadForm");
+        const fileInput = document.getElementById("files");
+        const fileList = document.getElementById("fileList");
+        const submitBtn = document.getElementById("submitBtn");
+        const progressContainer = document.getElementById("progressContainer");
+        const progressBar = document.getElementById("progressBar");
+        const statusMessage = document.getElementById("statusMessage");
+        const studentNameInput = document.getElementById("studentName");
+        const nameError = document.getElementById("nameError");
+
+        // عرض أسماء الملفات المختارة
+        fileInput.addEventListener("change", function() {
+            fileList.innerHTML = "";
+            Array.from(fileInput.files).forEach(file => {
+                const li = document.createElement("li");
+                li.textContent = file.name;
+                fileList.appendChild(li);
+            });
+        });
+
+        // دالة لتحويل الملف إلى Base64
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(",")[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // التعامل مع حدث الإرسال
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            // 1. التحقق من صحة الاسم (يجب أن يحتوي على 3 كلمات على الأقل)
+            const nameValue = studentNameInput.value.trim();
+            const nameParts = nameValue.split(/\s+/);
+            if (nameParts.length < 3) {
+                studentNameInput.style.borderColor = "var(--brand-orange)";
+                nameError.style.display = "block";
+                return;
+            } else {
+                studentNameInput.style.borderColor = "#3d475a";
+                nameError.style.display = "none";
+            }
+
+            // 2. تحديث حالة الـ UI أثناء الرفع
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Uploading... Please wait";
+            progressContainer.style.display = "block";
+            progressBar.style.width = "30%";
+            statusMessage.className = "status-message";
+            statusMessage.style.display = "none";
+
+            try {
+                const files = fileInput.files;
+                const filesData = [];
+
+                // 3. قراءة جميع الملفات وتحويلها
+                for (let i = 0; i < files.length; i++) {
+                    const base64Data = await getBase64(files[i]);
+                    filesData.push({
+                        filename: files[i].name,
+                        mimeType: files[i].type || "application/octet-stream",
+                        base64: base64Data
+                    });
+                }
+                
+                progressBar.style.width = "60%"; // تقدم وهمي أثناء تجهيز الداتا
+
+                // 4. تجهيز الـ JSON Payload
+                const payload = {
+                    studentName: nameValue,
+                    groupName: document.getElementById("groupName").value,
+                    sessionName: document.getElementById("sessionName").value,
+                    files: filesData
+                };
+
+                // 5. إرسال البيانات للـ Backend
+                const response = await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                progressBar.style.width = "100%";
+
+                // 6. التعامل مع النتيجة (نجاح/فشل)
+                if (result.status === "success") {
+                    showStatus(`✅ Assignment submitted successfully.\n\nThank you!\nYour files have been uploaded and recorded successfully.`, "success");
+                    form.reset();
+                    fileList.innerHTML = "";
+                } else {
+                    throw new Error(result.message || "Upload Failed");
+                }
+
+            } catch (error) {
+                console.error("Error:", error);
+                progressBar.style.backgroundColor = "var(--error)";
+                showStatus(`❌ Upload failed.\n\nPlease try again later.`, "error");
+            } finally {
+                // إعادة الزر لحالته الطبيعية
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Submit Assignment";
+                    progressContainer.style.display = "none";
+                    progressBar.style.width = "0%";
+                    progressBar.style.backgroundColor = "var(--brand-yellow)"; // إعادة لون الشريط
+                }, 2000);
+            }
+        });
+
+        // دالة لعرض رسائل النجاح أو الفشل
+        function showStatus(text, type) {
+            statusMessage.textContent = text;
+            statusMessage.className = `status-message ${type}`;
+        }
+    </script>
+</body>
+</html>
